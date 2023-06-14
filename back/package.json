@@ -1,16 +1,13 @@
 {
-  "name": "ss2023-ssc-group_13",
+  "name": "CCL-2 YouMeChampion",
   "version": "1.0.0",
   "description": "This is the repository of Igor van Duifhuizen (cc221020)",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon app.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://git.nwt.fhstp.ac.at/cc221019/ss2023-ssc-group_13.git"
-  },
-  "author": "Elina, Dejan, David & Igor",
+  "author": "Igor",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.1.0",
@@ -20,12 +17,14 @@
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "express-fileupload": "^1.4.0",
+    "express-generator": "^4.2.0",
     "fs": "^0.0.1-security",
     "jsonwebtoken": "^9.0.0",
+    "lol-champions": "^0.3.2",
     "morgan": "^1.10.0",
     "mysql": "^2.18.1",
+    "nodemon": "^2.0.22",
     "ws": "^8.13.0"
   },
-  "devDependencies": {},
   "keywords": []
 }

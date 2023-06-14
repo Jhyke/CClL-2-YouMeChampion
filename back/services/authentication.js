@@ -13,17 +13,16 @@ const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET;
  */
 async function authenticateUser({uname, pw}, users, res){
     const user = users.find(u => {
-        return u.name === uname
+        return u.userName === uname
     });
     //returns pending promise --> doesn't render true
-    if (user && await checkPassword(pw, user.password)) {
+    if (user && await checkPassword(pw, user.userPassword)) {
     // Generate an access token
         console.log(ACCESS_TOKEN_SECRET);
-        const accessToken = jwt.sign({ id: user.id, name: user.name }, ACCESS_TOKEN_SECRET, { expiresIn: '1000d' });
+        const accessToken = jwt.sign({ id: user.userID, name: user.userName }, ACCESS_TOKEN_SECRET, { expiresIn: '1000d' });
         res.cookie('accessToken', accessToken);
-        res.redirect('/users/' + user.id)
     } else {
-        res.send('Username or password incorrect');
+        console.log("Hoppola, something not oke");
     }
 };
 
@@ -35,17 +34,19 @@ async function authenticateUser({uname, pw}, users, res){
  */
 function authenticateJWT(req, res, next){
     const token = req.cookies['accessToken'];
+    console.log("This is my token ... " + token);
     if (token) {
         jwt.verify(token, ACCESS_TOKEN_SECRET, (err, user) => {
             if (err) {
-                return res.sendStatus(403);
+                return console.log("Forbidden request");
             }
             console.log(user)
             req.user = user;
             next();
         });
     } else {
-        res.sendStatus(401);
+        console.log("Unauthorized");
+        next();
     }
 }
 
