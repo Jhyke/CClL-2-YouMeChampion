@@ -1,7 +1,3 @@
-<script setup>
-
-</script>
-
 <template>
   <div class="navbar relative">
     <div class="flex-1">
@@ -22,14 +18,50 @@
         <li>
           <router-link to="/profile">Profile</router-link>
         </li>
-        <li>
+        <li v-if="!logedIn">
           <router-link to="/login">Login</router-link>
+        </li>
+        <li v-else>
+          <a v-on:click="logout">Logout</a>
         </li>
       </ul>
     </div>
   </div>
 
 </template>
+
+<script>
+import axios from 'axios';
+
+export default {
+  name: 'LoginComponent',
+  props: ["logedIn"],
+  data() {
+    return {
+      user: {},
+    };
+  },
+  methods: {
+    logout() {
+      console.log("Logout happened")
+
+      axios.get('http://localhost:3000/logout', {
+        withCredentials: true,
+      })
+          .then((response) => {
+            // Handle the successful login response
+            console.log(response.data);
+            window.location.href="/";
+          })
+          .catch((error) => {
+            // Handle any errors that occurred during login
+            console.error(error); // Replace with your desired error handling logic
+          });
+    },
+  },
+};
+</script>
+
 
 <style scoped>
 

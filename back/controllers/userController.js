@@ -131,7 +131,9 @@ function login(req,res,next){
  * @param next Possible-Middleware
  */
 function logout(req,res,next){
+    console.log("Logout in backend")
     res.cookie('accessToken', '', {maxAge: 0});
+    res.sendStatus(200);
 }
 
 //// Exports

@@ -17,7 +17,6 @@ let getUsers = () => new Promise((resolve, reject) => {
         if (err) {
             reject(err)
         } else {
-            console.log(users);
             resolve(users)
         }
     })

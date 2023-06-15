@@ -7,7 +7,8 @@ const router = express.Router();
 
 router.route('/')
     .get((req,res,next)=>{
-    res.sendStatus(200);
+        res.status(200);
+        res.send(req.user);
     });
 
 

@@ -12,7 +12,7 @@ const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET;
  * @param res The HTTP-Response
  */
 async function authenticateUser({uname, pw}, users, res){
-    const user = users.find(u => {
+    const user = users.find(u =>{
         return u.userName === uname
     });
     //returns pending promise --> doesn't render true
@@ -21,6 +21,7 @@ async function authenticateUser({uname, pw}, users, res){
         console.log(ACCESS_TOKEN_SECRET);
         const accessToken = jwt.sign({ id: user.userID, name: user.userName }, ACCESS_TOKEN_SECRET, { expiresIn: '1000d' });
         res.cookie('accessToken', accessToken);
+        console.log(res.cookie)
     } else {
         console.log("Hoppola, something not oke");
     }
@@ -88,5 +89,6 @@ async function checkPassword(password, hash){
 module.exports = {
     authenticateUser,
     authenticateJWT,
-    getUserId
+    getUserId,
+    checkPassword,
 };

@@ -3,14 +3,14 @@
     <div class="loginBox flex justify-center items-center">
       <div class="max-w-lg p-8 bg-card rounded-lg shadow-lg transform -translate-x-96 translate-y-40">
         <h2 class="text-3xl font-bold mb-6">Login</h2>
-        <form>
+        <form @submit="login">
           <div class="mb-6">
             <label for="uname" class="block font-bold mb-2">Username</label>
-            <input id="uname" type="text" class="w-full px-4 py-3  rounded-md" placeholder="Enter your username">
+            <input id="uname" v-model="uname" type="text" class="w-full px-4 py-3  rounded-md" placeholder="Enter your username">
           </div>
           <div class="mb-6">
-            <label for="password" class="block font-bold mb-2">Password</label>
-            <input id="password" type="password" class="w-full px-4 py-3 rounded-md" placeholder="Enter your password">
+            <label for="pw" class="block font-bold mb-2">Password</label>
+            <input id="pw"  v-model="pw" type="password" class="w-full px-4 py-3 rounded-md" placeholder="Enter your password">
           </div>
           <div class="flex justify-end">
             <button class="bg-btn hover:bg-blue-800 font-bold py-3 px-6 rounded" type="submit">Login</button>
@@ -26,9 +26,41 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   name: 'LoginComponent',
-}
+  data() {
+    return {
+      uname: "",
+      pw: "",
+    };
+  },
+  methods: {
+    login(event) {
+      console.log("Login happened")
+      event.preventDefault(); // Prevent the default form submission
+
+      let data = {
+        uname: this.uname,
+        pw: this.pw,
+      }
+      // Send a POST request to your backend API with the login credentials
+      axios.post('http://localhost:3000/login', data, {
+        withCredentials: true,
+      })
+          .then((response) => {
+            // Handle the successful login response
+            console.log(response.data);
+            window.location.href="/";
+          })
+          .catch((error) => {
+            // Handle any errors that occurred during login
+            console.error(error); // Replace with your desired error handling logic
+          });
+    },
+  },
+};
 </script>
 
 <style scoped>
