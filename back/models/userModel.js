@@ -76,11 +76,11 @@ let updateUser = (userData, userId) => new Promise(async(resolve, reject)=>{
  * @returns An object, which represents the newly created user
  */
 let addUser = (userData) => new Promise (async (resolve, reject)=> {
-    userData.password = await bcrypt.hash(userData.password, 10);
+    userData.pw = await bcrypt.hash(userData.pw, 10);
     let sql = "INSERT INTO users (userName, userEmail, userPassword)" +
-        " VALUES (" +  db.escape(userData.name) +
+        " VALUES (" +  db.escape(userData.uname) +
         "," + db.escape(userData.email) +
-        "," + db.escape(userData.password) +
+        "," + db.escape(userData.pw) +
         ")";
     console.log(sql);
     db.query(sql, function (err, result, fields){

@@ -19,7 +19,7 @@ async function authenticateUser({uname, pw}, users, res){
     if (user && await checkPassword(pw, user.userPassword)) {
     // Generate an access token
         console.log(ACCESS_TOKEN_SECRET);
-        const accessToken = jwt.sign({ id: user.userID, name: user.userName }, ACCESS_TOKEN_SECRET, { expiresIn: '1000d' });
+        const accessToken = jwt.sign({ id: user.userID, name: user.userName, email: user.userEmail, desc: user.userDescription }, ACCESS_TOKEN_SECRET, { expiresIn: '1000d' });
         res.cookie('accessToken', accessToken);
         console.log(res.cookie)
     } else {

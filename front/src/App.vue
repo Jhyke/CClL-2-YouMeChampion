@@ -3,13 +3,13 @@ import Nav from "./components/nav.vue";
 import {ref, onMounted} from 'vue'
 import axios from 'axios'
 
-const logedIn = ref(null);
+const loggedIn = ref(null);
 
 onMounted(async () => {
   try {
     const response = await axios.get('http://localhost:3000/', {withCredentials: true});
-    logedIn.value = response.data;
-    console.log(logedIn.value);
+    loggedIn.value = response.data;
+    console.log(loggedIn.value);
   } catch (error) {
     console.error(error);
   }
@@ -20,8 +20,8 @@ onMounted(async () => {
   <div class="title">
     <h1 class="text-4xl">YouMeChampion</h1>
   </div>
-  <Nav :logedIn="logedIn"/>
-  <RouterView :logedIn="logedIn"/>
+  <Nav :loggedIn="loggedIn"/>
+  <RouterView :loggedIn="loggedIn"/>
 </template>
 
 <style scoped>

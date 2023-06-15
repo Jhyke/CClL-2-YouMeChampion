@@ -28,8 +28,8 @@
         </div>
 
         <div class="col-span-3 h-full">
-          <!-- Selected Champions Box Not LogedIn -->
-          <div class="h-[22.8rem]" v-if="!logedIn">
+          <!-- Selected Champions Box Not loggedIn -->
+          <div class="h-[22.8rem]" v-if="!loggedIn">
             <div class="p-4 bg-gray-200 h-full rounded">
               <h2 class="text-xl font-bold mb-4">PLease log in to select and see your champions</h2>
               <!-- Selected champions content goes here -->
@@ -59,7 +59,7 @@
 <script>
 export default {
   name: 'HomeComponent',
-  props: ["logedIn"],
+  props: ["loggedIn"],
 }
 </script>
 

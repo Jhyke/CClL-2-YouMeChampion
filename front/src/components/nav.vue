@@ -5,7 +5,7 @@
       <a class="btn btn-ghost normal-case text-xl">News</a>
       <a class="btn btn-ghost normal-case text-xl">Champions</a>
       <a class="btn btn-ghost normal-case text-xl">MostPLayed</a>
-      <a class="btn btn-ghost normal-case text-xl">Suggestions</a>
+      <a v-if="loggedIn" class="btn btn-ghost normal-case text-xl">Suggestions</a>
       <a class="btn btn-ghost normal-case text-xl">Chats</a>
     </div>
     <div class="flex-none gap-2 dropdown dropdown-end ">
@@ -15,14 +15,17 @@
         </div>
       </label>
       <ul tabindex="0" class="mt-3 p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52">
-        <li>
+        <li v-if="loggedIn">
           <router-link to="/profile">Profile</router-link>
         </li>
-        <li v-if="!logedIn">
-          <router-link to="/login">Login</router-link>
+        <li>
+          <router-link to="/users">Users</router-link>
+        </li>
+        <li v-if="loggedIn">
+          <a v-on:click="logout">Logout</a>
         </li>
         <li v-else>
-          <a v-on:click="logout">Logout</a>
+          <router-link to="/login">Login</router-link>
         </li>
       </ul>
     </div>
@@ -35,7 +38,7 @@ import axios from 'axios';
 
 export default {
   name: 'LoginComponent',
-  props: ["logedIn"],
+  props: ["loggedIn"],
   data() {
     return {
       user: {},
