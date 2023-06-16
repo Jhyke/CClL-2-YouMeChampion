@@ -9,6 +9,20 @@
   font-family: "BeaufortForLoL";
   src: url("fonts/BeaufortForLoL-OTF/BeaufortforLOL-Bold.otf") format("opentype")
 }
+@layer utilities {
+  @variants responsive {
+    /* Hide scrollbar for Chrome, Safari and Opera */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* Hide scrollbar for IE, Edge and Firefox */
+    .no-scrollbar {
+      -ms-overflow-style: none;  /* IE and Edge */
+      scrollbar-width: none;  /* Firefox */
+    }
+  }
+}
 
 :root {
   font-family: Spiegel;
@@ -28,12 +42,15 @@ h1{
   margin-left: 1%;
 }
 
+.mainBox{
+  min-height: 88.2vh;
+  width: 80vw;
+}
+
 .loginBox{
   background-color: #091428;
   background-image: url("./images/bg-img.jpg");
   background-size: cover;
-  height: 88.2vh;
-  width: 80vw;
 }
 
 .bg-card{

@@ -4,7 +4,7 @@ const Websocket = require('ws')
 
 const wss = new Websocket.Server({ port: 8080 })
 wss.on('connection', ws => {
-    ws.room = "";
+    ws.room = "1";
     ws.on('message', message => {
         console.log(`Received message => ${message}`)
         let msg = JSON.parse(message);

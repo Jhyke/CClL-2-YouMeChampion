@@ -1,6 +1,6 @@
 <template>
   <div class="flex justify-center items-center">
-    <div class="loginBox flex justify-center items-center">
+    <div class="loginBox mainBox flex justify-center items-center">
       <div class="max-w-lg p-8 bg-card rounded-lg shadow-lg transform -translate-x-96 translate-y-40">
         <h2 class="text-3xl font-bold mb-6">Login</h2>
         <form @submit="login">

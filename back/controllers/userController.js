@@ -22,7 +22,10 @@ const userModel = require("../models/userModel");
  */
 function viewUsers(req, res, next) {
     userModel.getUsers()
-        .then(users => res.sendStatus(200))
+        .then(users => {
+            res.send(users)
+            res.status(200)
+        })
         .catch(error => res.sendStatus(500));
 }
 
@@ -58,11 +61,19 @@ function viewUser(req, res, next) {
  * @param next Possible-Middleware
  */
 function editUser(req, res, next) {
+    console.log("editUser triggered in userController");
     userModel.updateUser(req.body, req.params.id)
-        .then(user =>  {
-            res.sendStatus(200);
+        .then(result =>  {
+            userModel.getUsers().then(async users => {
+                await authenticationService.authenticateUser(req.body, users, res);
+                res.sendStatus(200);
+            })
         })
-        .catch(error => res.sendStatus(500))
+        .catch(
+            error => {
+                console.log(error)
+                res.sendStatus(500)
+            })
 }
 
 /**

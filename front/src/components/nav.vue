@@ -6,7 +6,7 @@
       <a class="btn btn-ghost normal-case text-xl">Champions</a>
       <a class="btn btn-ghost normal-case text-xl">MostPLayed</a>
       <a v-if="loggedIn" class="btn btn-ghost normal-case text-xl">Suggestions</a>
-      <a class="btn btn-ghost normal-case text-xl">Chats</a>
+      <router-link class="btn btn-ghost normal-case text-xl" to="/chats">Chats</router-link>
     </div>
     <div class="flex-none gap-2 dropdown dropdown-end ">
       <label tabindex="0" class="btn btn-ghost btn-circle avatar">

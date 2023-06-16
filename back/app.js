@@ -30,7 +30,6 @@ const usersRouter = require('./routes/users');
 const loginRouter = require('./routes/login');
 const logoutRouter = require('./routes/logout');
 const registerRouter = require('./routes/register');
-const chatRouter = require('./routes/chat');
 const championsRouter = require('./routes/champions');
 const {authenticateJWT} = require("./services/authentication");
 
@@ -51,7 +50,6 @@ app.use('/users', usersRouter);
 app.use('/login', loginRouter);
 app.use('/register', registerRouter);
 app.use('/logout', logoutRouter);
-app.use('/chat', chatRouter);
 app.use('/champions', championsRouter);
 app.use(express.static('public'));
 app.use(errorHandler);
@@ -82,8 +80,7 @@ function errorHandler(err, req, res, next){
  * @param next Possible-Middleware
  */
 function notFound(req,res,next){
-    res.status(404);
-    res.render('404', {url : req.url})
+    res.sendStatus(404);
 }
 
 app.listen(port, ()=>{

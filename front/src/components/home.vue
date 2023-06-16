@@ -1,6 +1,6 @@
 <template>
   <div class="flex justify-center items-center">
-    <div class="homeBox">
+    <div class="mainBox">
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4 firstGrid">
         <!-- Welcome Text Box -->
         <div class="col-span-1 h-full">
@@ -69,9 +69,5 @@ export default {
 }
 .secondGrid{
   height: auto;
-}
-.homeBox{
-  height: 88.2vh;
-  width: 80vw;
 }
 </style>

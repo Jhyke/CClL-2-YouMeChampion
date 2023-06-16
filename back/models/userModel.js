@@ -1,5 +1,7 @@
 //// Modules
 const bcrypt = require('bcrypt');
+const {authenticateJWT, authenticateUser} = require("../services/authentication");
+const authenticationService = require("../services/authentication");
 
 //// Services
 const db = require('../services/database.js').config;
@@ -17,6 +19,7 @@ let getUsers = () => new Promise((resolve, reject) => {
         if (err) {
             reject(err)
         } else {
+            console.log(users)
             resolve(users)
         }
     })
@@ -53,20 +56,23 @@ let getUser = (id) => new Promise((resolve, reject) => {
  * @returns The result of the db.query
  */
 let updateUser = (userData, userId) => new Promise(async(resolve, reject)=>{
-    userData.password = await bcrypt.hash(userData.password, 10);
+    console.log("Update user triggered in userModel");
+    userData.password = await bcrypt.hash(userData.pw, 10);
     let sql = "UPDATE users SET" +
-        " userName = "+ db.escape(userData.name) +
+        " userName = "+ db.escape(userData.uname) +
         ", userEmail = "+ db.escape(userData.email) +
         ", userPassword = "+ db.escape(userData.password)+
+        ", userDescription = "+ db.escape(userData.desc)+
         " WHERE userID = " + parseInt(userId);
     console.log(sql);
     db.query(sql, function (err, result, fields){
         if(err) {
             console.log(err)
             reject(err)
+        }else{
+            console.log(result.affectedRows + " rows have been affected")
+            resolve(result)
         }
-        console.log(result.affectedRows + " rows have been affected")
-        resolve(result)
     })
 })
 

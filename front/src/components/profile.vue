@@ -1,7 +1,7 @@
 <template>
   <div v-if="loggedIn">
     <div class="flex justify-center items-center">
-      <div class="profileBox">
+      <div class="mainBox">
         <div class="flex gap-4">
           <div class="flex flex-col gap-4 w-1/4">
             <!-- Avatar Text Box -->
@@ -43,8 +43,8 @@
                   </div>
                 </form>
 
-                <!--              edit form-->
-                <form @submit="updateProfile" v-if="formVisible">
+                <!--edit form-->
+                <form @submit="edit" v-if="formVisible">
                   <div class="flex col-span-3">
                     <div class="mb-3 mr-3 w-1/4">
                       <label for="uname" class="block font-bold mb-2">Username</label>
@@ -81,9 +81,14 @@
       </div>
     </div>
   </div>
-  <div v-else>
-    <div class="flex ml-3">
-      <button class="bg-btn hover:bg-blue-800 font-bold py-3 px-6 rounded" @click="backHome">{{ formVisible ? 'Close Form' : 'Edit Profile' }}</button>
+  <div v-else class="flex justify-center items-center">
+    <div class="flex justify-center items-center">
+      <div class="max-w-lg p-8 bg-gray-200 rounded-lg shadow-lg transform -translate-x-96 translate-y-28">
+        <div class="mt-4 text-gray-600">
+          You can not go to this page please
+          <router-link to="/login" class="text-blue-500 hover:text-blue-600">Login here</router-link>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -106,7 +111,35 @@ export default {
     },
     backHome(){
       window.location.href="/"
-    }
+    },
+    edit(event) {
+      console.log("Edit happened")
+      event.preventDefault(); // Prevent the default form submission
+
+      let userId = this.loggedIn.id;
+
+      let data = {
+        uname: this.uname,
+        email: this.email,
+        pw: this.pw,
+        desc: this.desc
+      }
+      // Send a POST request to your backend API with the edit credentials
+      axios.post(`http://localhost:3000/users/${userId}/edit`, data, {
+        withCredentials: true,
+      })
+          .then((response) => {
+            // Handle the successful login response
+            console.log("This is before going back to /profile");
+            console.log(response.data);
+            window.location.href="/profile";
+          })
+          .catch((error) => {
+            // Handle any errors that occurred during login
+            console.log("This is inside the catch");
+            console.error(error); // Replace with your desired error handling logic
+          });
+    },
   }
 };
 </script>
@@ -116,9 +149,5 @@ export default {
   .transform {
     transform: none;
   }
-}
-.profileBox{
-  max-height: 88.2vh;
-  width: 80vw;
 }
 </style>
