@@ -54,9 +54,18 @@ h1{
 }
 
 .bg-card{
-  background-color: #1E2328;
+  background-color: #1E282D;
+  box-shadow: 4px 4px 5px #1E2328;
+}
+
+.bg-box{
+  background-color: #1E282D;
+  box-shadow: 4px 4px 5px #1E2328;
 }
 
 .bg-btn{
   background-color: #005A82;
+}
+.bg-btn-del{
+  background-color: #ba190d;
 }

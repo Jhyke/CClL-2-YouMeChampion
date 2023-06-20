@@ -5,6 +5,8 @@ import Register from './src/components/register.vue';
 import Profile from './src/components/profile.vue';
 import Users from './src/components/users.vue';
 import Chats from './src/components/chats.vue';
+import Champions from './src/components/champions.vue';
+import ChampionsDetail from './src/components/championsDetail.vue';
 
 const routes = [
     {
@@ -36,6 +38,16 @@ const routes = [
         path: '/chats',
         name: 'Chats',
         component: Chats,
+    },
+    {
+        path: '/champions',
+        name: 'Champions',
+        component: Champions,
+    },
+    {
+        path: '/champions/:championID',
+        name: 'ChampionsDetail',
+        component: ChampionsDetail,
     },
 ];
 

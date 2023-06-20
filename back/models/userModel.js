@@ -60,6 +60,9 @@ let updateUser = (userData, userId) => new Promise(async(resolve, reject)=>{
     userData.password = await bcrypt.hash(userData.pw, 10);
     let sql = "UPDATE users SET" +
         " userName = "+ db.escape(userData.uname) +
+        ", userPosi = "+ db.escape(userData.posi) +
+        ", userSecPosi = "+ db.escape(userData.secPosi) +
+        ", userIGN = "+ db.escape(userData.ign) +
         ", userEmail = "+ db.escape(userData.email) +
         ", userPassword = "+ db.escape(userData.password)+
         ", userDescription = "+ db.escape(userData.desc)+
@@ -126,6 +129,43 @@ let deleteUser = (id) => new Promise ((resolve, reject) => {
     })
 })
 
+let addFriend = (userID, friendID) => new Promise ((resolve, reject) => {
+    let sql = "INSERT INTO userFriends (userID_1, userID_2)"+
+        " VALUES (" + userID +
+        ", " + friendID +
+        ")";
+
+    db.query(sql, function (err, result, fields){
+        if(err){
+            console.log(err);
+            reject(err);
+        }
+        console.log(result.affectedRows + " rows have been added");
+        resolve();
+    })
+})
+
+/**
+ * This function access the DB and retrieves all the friends for the user
+ * @returns A list of all friends within the DB for this user
+ */
+let getFriends = (id) => new Promise((resolve, reject) => {
+    let sql = "SELECT * FROM userFriends"+
+        " INNER JOIN users"+
+        " ON userFriends.userID_2 = users.userID"+
+        " WHERE userID_1 =" + parseInt(id);
+
+    db.query(sql, function (err, friends, fields) {
+        if (err) {
+            console.log("Error in getFriends" + err)
+            reject(err)
+        } else {
+            console.log(friends)
+            resolve(friends)
+        }
+    })
+})
+
 
 //// Exports
 module.exports = {
@@ -133,5 +173,7 @@ module.exports = {
     getUser,
     updateUser,
     addUser,
-    deleteUser
+    deleteUser,
+    addFriend,
+    getFriends
 };

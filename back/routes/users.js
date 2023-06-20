@@ -22,6 +22,11 @@ router.route('/:id/edit')
 router.route('/:id/delete')
     .delete(userController.deleteUser);
 
+router.route('/:id/addFriend')
+    .post(userController.addFriend);
+
+router.route('/:id/friendList')
+    .get(userController.viewFriends);
 
 
 //// Modules

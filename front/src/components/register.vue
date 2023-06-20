@@ -70,5 +70,9 @@ export default {
 </script>
 
 <style scoped>
-
+@media (max-width: 1440px) {
+  .transform {
+    transform: none;
+  }
+}
 </style>

@@ -22,7 +22,10 @@ const championModel = require("../models/championModel");
  */
 function viewChampions(req, res, next) {
     championModel.getChampions()
-        .then(champions => res.sendStatus(200))
+        .then(champions => {
+            res.send(champions)
+            res.status(200)
+        })
         .catch(error => res.sendStatus(500));
 }
 

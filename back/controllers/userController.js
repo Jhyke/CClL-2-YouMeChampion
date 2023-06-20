@@ -106,12 +106,52 @@ function register(req,res,next){
 function deleteUser(req,res,next){
     userModel.deleteUser(parseInt(req.params.id))
         .then(data =>{
+            res.cookie('accessToken', '', {maxAge: 0});
             res.sendStatus(200);
         })
         .catch(error => {
             res.sendStatus(500);
         })
 
+}
+
+/**
+ * This function adds a friend to the user
+ * Preferred-Methode: POST
+ *
+ * @param req HTTP-Request
+ * @param res HTTP-Response
+ * @param next Possible-Middleware
+ */
+function addFriend(req,res,next){
+    userModel.addFriend(parseInt(req.params.id), parseInt(req.body.friendID))
+        .then(data =>{
+            console.log("This is data from addFriend: "+data)
+            res.status(200);
+            res.send(data);
+        })
+        .catch(error => {
+            res.sendStatus(500);
+        })
+
+}
+
+/**
+ * This function sends the users friends to the front-end
+ * This View shows all friends, which exist in the DB for this user
+ * Preferred-Methode: GET
+ *
+ * @param req HTTP-Request
+ * @param res HTTP-Response
+ * @param next Possible-Middleware Callback
+ */
+function viewFriends(req, res, next) {
+    userModel.getFriends(parseInt(req.params.id))
+        .then(friends => {
+            res.send(friends)
+            res.status(200)
+        })
+        .catch(error => res.sendStatus(500));
 }
 
 /**
@@ -154,6 +194,8 @@ module.exports = {
     editUser,
     register,
     deleteUser,
+    addFriend,
+    viewFriends,
     login,
     logout
 };

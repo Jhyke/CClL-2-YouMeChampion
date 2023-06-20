@@ -1,9 +1,42 @@
+<script setup>
+import {ref, onMounted} from 'vue'
+import axios from 'axios'
+
+const loggedIn = ref(null);
+
+onMounted(async () => {
+  try {
+    const response = await axios.get('http://localhost:3000/', {withCredentials: true});
+    loggedIn.value = response.data;
+    console.log(loggedIn.value);
+  } catch (error) {
+    console.error(error);
+  }
+});
+
+function logout() {
+  console.log("Logout happened")
+
+  axios.get('http://localhost:3000/logout', {
+    withCredentials: true,
+  })
+      .then((response) => {
+        // Handle the successful login response
+        console.log(response.data);
+        window.location.href="/";
+      })
+      .catch((error) => {
+        // Handle any errors that occurred during login
+        console.error(error); // Replace with your desired error handling logic
+      });
+}
+</script>
 <template>
-  <div class="navbar relative">
+  <div class="navbar">
     <div class="flex-1">
       <router-link class="btn btn-ghost normal-case text-xl" to="/">Home</router-link>
       <a class="btn btn-ghost normal-case text-xl">News</a>
-      <a class="btn btn-ghost normal-case text-xl">Champions</a>
+      <router-link class="btn btn-ghost normal-case text-xl" to="/champions">Champions</router-link>
       <a class="btn btn-ghost normal-case text-xl">MostPLayed</a>
       <a v-if="loggedIn" class="btn btn-ghost normal-case text-xl">Suggestions</a>
       <router-link class="btn btn-ghost normal-case text-xl" to="/chats">Chats</router-link>
@@ -38,34 +71,12 @@ import axios from 'axios';
 
 export default {
   name: 'LoginComponent',
-  props: ["loggedIn"],
-  data() {
-    return {
-      user: {},
-    };
-  },
-  methods: {
-    logout() {
-      console.log("Logout happened")
-
-      axios.get('http://localhost:3000/logout', {
-        withCredentials: true,
-      })
-          .then((response) => {
-            // Handle the successful login response
-            console.log(response.data);
-            window.location.href="/";
-          })
-          .catch((error) => {
-            // Handle any errors that occurred during login
-            console.error(error); // Replace with your desired error handling logic
-          });
-    },
-  },
 };
 </script>
 
 
 <style scoped>
-
+.navbar{
+  background-color: #0A323C;
+}
 </style>

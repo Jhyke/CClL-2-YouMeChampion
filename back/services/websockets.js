@@ -11,7 +11,7 @@ wss.on('connection', ws => {
         if (msg.joinRoom) {ws.room = msg.joinRoom}
         if (msg.room) {websocketSendToAll(JSON.stringify(msg))}
     })
-    ws.send(JSON.stringify({message: 'Hello! Message From Server!!'}))
+    ws.send(JSON.stringify({message: 'Hello! Click on a room to join and start texting :D'}))
 })
 
 /**
