@@ -2,6 +2,7 @@
 import {ref, onMounted} from 'vue'
 import axios from 'axios'
 import FriendList from "./friendList.vue";
+import SelectChamp from "./selectedChamp.vue";
 
 const loggedIn = ref(null);
 
@@ -37,7 +38,7 @@ onMounted(async () => {
       </div>
       <div class="grid grid-cols-1 md:grid-cols-4 gap-4 secondGrid mt-4">
         <!-- Friends List Box -->
-        <div class="col-span-1 h-full">
+        <div class="col-span-1 h-full" v-if="loggedIn">
           <FriendList />
         </div>
 
@@ -51,10 +52,7 @@ onMounted(async () => {
           </div>
           <!-- Selected Champions Box -->
           <div class="h-[22.8rem]" v-else>
-            <div class="p-4 bg-box h-full rounded">
-              <h2 class="text-xl font-bold mb-4">Selected Champions</h2>
-              <!-- Selected champions content goes here -->
-            </div>
+            <SelectChamp />
           </div>
 
           <!-- News Block Box -->

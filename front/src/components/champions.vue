@@ -1,6 +1,7 @@
 <script setup>
 import {ref, onMounted} from 'vue'
 import axios from 'axios'
+import SelectChamp from "./selectedChamp.vue";
 
 const loggedIn = ref(null);
 
@@ -18,7 +19,12 @@ onMounted(async () => {
   <div class="flex justify-center items-center">
     <div class="mainBox">
       <div v-if="loggedIn">
-        <div class="grid grid-cols-1 md:grid-cols-5 gap-3 firstGrid">
+        <div class="firstGrid">
+          <div class="col-span-5 h-full">
+            <SelectChamp/>
+          </div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-5 gap-3 mt-4">
           <!-- Champions List Box -->
           <div class="col-span-5 h-full">
             <div class="p-4 bg-box h-full rounded">
@@ -43,7 +49,29 @@ onMounted(async () => {
         </div>
       </div>
       <div v-else>
-
+        <div class="grid grid-cols-1 md:grid-cols-5 gap-3 mt-4">
+          <!-- Champions List Box -->
+          <div class="col-span-5 h-full">
+            <div class="p-4 bg-box h-full rounded">
+              <h2 class="text-xl font-bold mb-4">All champions</h2>
+              <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+                <template v-for="(champ, key) in champions" :key="key">
+                  <button @click="viewChampionDetails(champ.id)">
+                    <div class="px-4 py-2 border-b border-gray-200 hover:bg-gray-100 transition-colors rounded">
+                      <div class="flex items-center">
+                        <img :src="getChampionIcon(champ.id)" class="mr-3 w-20 h-20" alt="Champion Icon">
+                        <div>
+                          <p class="text-xl font-bold">{{ champ.name }}</p>
+                          <p class="text-base">{{ champ.title }}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </button>
+                </template>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -86,6 +114,6 @@ export default {
 
 <style scoped>
 .firstGrid {
-  height: 50vh;
+  height: 22.8rem;
 }
 </style>

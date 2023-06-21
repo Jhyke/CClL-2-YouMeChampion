@@ -13,6 +13,11 @@ onMounted(async () => {
     console.error(error);
   }
 });
+
+function addChamp(){
+  console.log("Adding champion");
+}
+
 </script>
 <template>
   <div class="flex justify-center items-center">
@@ -67,6 +72,25 @@ onMounted(async () => {
                 <span class="font-bold">R: {{ champDet.spells[3].name }}</span>
               </div>
             </div>
+          </div>
+          <div class="flex justify-end">
+            <form @submit="addChamp">
+              <div class="flex col-span-3">
+                <div class="mr-4">
+                  <select v-model="position" id="position" class="w-full px-4 py-4 rounded-md">
+                    <option value="" disabled selected>Select a position</option>
+                    <option value="Top">Top</option>
+                    <option value="Jungle">Jungle</option>
+                    <option value="Mid">Mid</option>
+                    <option value="ADC">ADC</option>
+                    <option value="Support">Support</option>
+                  </select>
+                </div>
+                <div>
+                  <button class="bg-btn hover:bg-blue-800 font-bold py-3 px-2 rounded h-full" type="submit"> Add to my champs</button>
+                </div>
+              </div>
+            </form>
           </div>
         </div>
       </div>

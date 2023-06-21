@@ -4,16 +4,106 @@ import axios from 'axios'
 import FriendList from "./friendList.vue";
 
 const loggedIn = ref(null);
+const connection = ref(null);
+const curRoom = ref(null);
 
 onMounted(async () => {
   try {
     const response = await axios.get('http://localhost:3000/', {withCredentials: true});
-     loggedIn.value = response.data;
+    loggedIn.value = response.data;
     console.log(loggedIn.value);
+
+    console.log("Starting connection to WebSocket Server");
+    connection.value = new WebSocket("ws://localhost:8080");
+
+    connection.value.onmessage = (event) => {
+      addTextMessage(JSON.parse(event.data));
+    };
+
+    connection.value.onopen = (event) => {
+      console.log('websocket is connected ...')
+      connection.value.send(JSON.stringify({
+        name: "Server",
+        room: curRoom.value,
+        message: 'connected to: ' + curRoom.value,
+      }))
+    };
   } catch (error) {
     console.error(error);
   }
 });
+
+function sendMyMessage() {
+  console.log("sendMyMessage triggered");
+  console.log("curRoom number: " + curRoom.value);
+  const text = document.getElementById("message").value;
+  let message = {
+    room: curRoom.value,
+    name: loggedIn.value.name,
+    message: text,
+  };
+  document.getElementById("message").value = "";
+  if (text) {
+    console.log(message);
+    connection.value.send(JSON.stringify(message));
+  }
+}
+
+function addTextMessage(message) {
+  let element = document.createElement("div");
+  element.classList = "flex";
+  let h4 = document.createElement("h4");
+  h4.innerHTML = message.name;
+  let text = document.createTextNode(": " + message.message);
+  console.log(message.message);
+  element.appendChild(h4);
+  element.appendChild(text);
+  document.getElementById("chat-messages").appendChild(element);
+}
+
+function roomChange(roomName){
+  switch (roomName){
+    case "all":
+      curRoom.value = "1";
+      connectRoom(curRoom.value);
+      break;
+    case "top":
+      curRoom.value = "2";
+      connectRoom(curRoom.value);
+      break;
+    case "jungle":
+      curRoom.value = "3";
+      connectRoom(curRoom.value);
+      break;
+    case "mid":
+      curRoom.value = "4";
+      connectRoom(curRoom.value);
+      break;
+    case "bot":
+      curRoom.value = "5";
+      connectRoom(curRoom.value);
+      break;
+    case "support":
+      curRoom.value = "6";
+      connectRoom(curRoom.value);
+      break;
+  }
+}
+function connectRoom(roomID){
+  connection.value.send(JSON.stringify({joinRoom: roomID}));
+  document.getElementById("chat-messages").innerHTML = "";
+  let message = {
+    room: roomID,
+    name: "Server",
+    message: "Your a connected to room: " + roomID,
+  };
+  addTextMessage(message)
+}
+
+function handleChatID (chatID) {
+  curRoom.value = chatID.ID.toString();
+  connectRoom(curRoom.value)
+}
 </script>
 <template>
   <div class="flex justify-center items-center">
@@ -24,7 +114,7 @@ onMounted(async () => {
             <!-- Friends Text Box -->
             <div class="col-span-1 h-[25rem]">
               <div class="h-full">
-                <FriendList />
+                <FriendList @chatID="handleChatID"/>
               </div>
             </div>
             <!-- Public List Box -->
@@ -113,96 +203,9 @@ onMounted(async () => {
 
 <script>
 export default {
-  name: 'ChatComponent',
-  data() {
-    return {
-      curUser: "",
-      curRoom: "",
-    };
-  },
-  methods: {
-    sendMyMessage() {
-      console.log("sendMyMessage triggered");
-      console.log("curRoom number: " + this.curRoom);
-      const text = document.getElementById("message").value;
-      let message = {
-        room: this.curRoom,
-        name: this.loggedIn.name,
-        message: text,
-      };
-      document.getElementById("message").value = "";
-      if (text) {
-        console.log(message);
-        this.connection.send(JSON.stringify(message));
-      }
-    },
-    addTextMessage(message) {
-      let element = document.createElement("div");
-      element.classList = "flex";
-      let h4 = document.createElement("h4");
-      h4.innerHTML = message.name;
-      let text = document.createTextNode(": " + message.message);
-      console.log(message.message);
-      element.appendChild(h4);
-      element.appendChild(text);
-      document.getElementById("chat-messages").appendChild(element);
-    },
-    roomChange(roomName){
-      switch (roomName){
-        case "all":
-          this.curRoom = "1";
-          this.connectRoom();
-          break;
-        case "top":
-          this.curRoom = "2";
-          this.connectRoom();
-          break;
-        case "jungle":
-          this.curRoom = "3";
-          this.connectRoom();
-          break;
-        case "mid":
-          this.curRoom = "4";
-          this.connectRoom();
-          break;
-        case "bot":
-          this.curRoom = "5";
-          this.connectRoom();
-          break;
-        case "support":
-          this.curRoom = "6";
-          this.connectRoom();
-          break;
-      }
-    },
-    connectRoom(){
-      this.connection.send(JSON.stringify({joinRoom: this.curRoom}));
-      document.getElementById("chat-messages").innerHTML = "";
-      let message = {
-        room: this.curRoom,
-        name: "Server",
-        message: "Your a connected to room: " + this.curRoom,
-      };
-      this.addTextMessage(message)
-    },
-  },created() {
-    console.log("Starting connection to WebSocket Server");
-    this.connection = new WebSocket("ws://localhost:8080");
+  name: 'ChatComponent'
 
-    this.connection.onmessage = (event) => {
-      this.addTextMessage(JSON.parse(event.data));
-    };
-
-    this.connection.onopen = (event) => {
-      console.log('websocket is connected ...')
-      this.connection.send(JSON.stringify({
-        name: "Server",
-        room: this.curRoom,
-        message: 'connected to: ' + this.curRoom,
-      }))
-    };
-  }
-};
+}
 </script>
 
 <style scoped>

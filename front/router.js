@@ -7,6 +7,7 @@ import Users from './src/components/users.vue';
 import Chats from './src/components/chats.vue';
 import Champions from './src/components/champions.vue';
 import ChampionsDetail from './src/components/championsDetail.vue';
+import NotFound from './src/components/notFound.vue';
 
 const routes = [
     {
@@ -48,6 +49,11 @@ const routes = [
         path: '/champions/:championID',
         name: 'ChampionsDetail',
         component: ChampionsDetail,
+    },
+    {
+        path: '/:pathMatch(.*)*',
+        name: 'not-found',
+        component: NotFound,
     },
 ];
 

@@ -153,7 +153,8 @@ let getFriends = (id) => new Promise((resolve, reject) => {
     let sql = "SELECT * FROM userFriends"+
         " INNER JOIN users"+
         " ON userFriends.userID_2 = users.userID"+
-        " WHERE userID_1 =" + parseInt(id);
+        " WHERE userID_1 =" + parseInt(id) +
+        " OR userID_2 =" + parseInt(id);
 
     db.query(sql, function (err, friends, fields) {
         if (err) {
