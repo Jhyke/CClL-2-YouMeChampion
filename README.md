@@ -3,7 +3,7 @@
 Welcome to my page I made for the studie course BCC. It is a page for League of Legends players to make new friends and find new champions to play. It is built using Vue, Vite, Node.js, Express, Tailwind CSS, DaisyUI, and Axios.
 
 ## Features
-### pages
+### Pages
   - Home
       - Here the user sees the latest news and a welcome message
       - Once logged in they also see their friendlist and their selected champions
