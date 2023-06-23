@@ -8,57 +8,33 @@ const authenticationService = require("../services/authentication");
 //// Models
 const userModel = require("../models/userModel");
 
-
 //// Functions
 
 /**
- * This function renders the users-View
- * This View shows all Users, which exist in the DB
- * Preferred-Methode: GET
+ * Renders the users view.
+ * This view displays all users existing in the database.
+ * Preferred Method: GET
  *
- * @param req HTTP-Request
- * @param res HTTP-Response
- * @param next Possible-Middleware Callback
+ * @param req HTTP Request
+ * @param res HTTP Response
+ * @param next Possible Middleware Callback
  */
 function viewUsers(req, res, next) {
     userModel.getUsers()
         .then(users => {
-            res.send(users)
-            res.status(200)
+            res.status(200); // Set the HTTP status code to 200 (OK)
+            res.send(users); // Send the retrieved users as the response
         })
-        .catch(error => res.sendStatus(500));
+        .catch(error => res.sendStatus(500)); // Send a generic server error status code if an error occurs
 }
 
 /**
- * This function renders the user-View
- * This View shows one User, which exist in the DB
- * specified by the req.params.id
- * Preferred-Methode: GET
+ * Updates the user data based on req.body.
+ * Preferred Method: POST
  *
- * @param req HTTP-Request
- * @param res HTTP-Response
- * @param next Possible-Middleware
- */
-function viewUser(req, res, next) {
-    userModel.getUser(parseInt(req.params.id))
-        .then(user =>  {
-            console.table(user);
-            res.sendStatus(200);
-        })
-        .catch((err) => {
-            res.status(404)
-            next(err);
-        })
-}
-
-/**
- * This function updates the user
- * data inside req.body
- * Preferred-Methode: POST
- *
- * @param req HTTP-Request
- * @param res HTTP-Response
- * @param next Possible-Middleware
+ * @param req HTTP Request
+ * @param res HTTP Response
+ * @param next Possible Middleware
  */
 function editUser(req, res, next) {
     console.log("editUser triggered in userController");
@@ -66,131 +42,123 @@ function editUser(req, res, next) {
         .then(result =>  {
             userModel.getUsers().then(async users => {
                 await authenticationService.authenticateUser(req.body, users, res);
-                res.sendStatus(200);
+                res.sendStatus(200); // Send a success status code when the user is updated successfully
             })
         })
-        .catch(
-            error => {
-                console.log(error)
-                res.sendStatus(500)
-            })
+        .catch(error => {
+            console.log(error); // Log the error for debugging purposes
+            res.sendStatus(500); // Send a generic server error status code if an error occurs
+        });
 }
 
 /**
- * This function creates a new user
- * data inside req.body
- * Preferred-Methode: POST
+ * Creates a new user based on req.body.
+ * Preferred Method: POST
  *
- * @param req HTTP-Request
- * @param res HTTP-Response
- * @param next Possible-Middleware
+ * @param req HTTP Request
+ * @param res HTTP Response
+ * @param next Possible Middleware
  */
-function register(req,res,next){
+function register(req, res, next) {
     userModel.addUser(req.body)
-    .then(user =>  {
-       res.sendStatus(200);
-    })
-        .catch(error => res.sendStatus(500))
+        .then(user => {
+            res.sendStatus(200); // Send a success status code when the user is added successfully
+        })
+        .catch(error => res.sendStatus(500)); // Send a generic server error status code if an error occurs
 }
 
-
 /**
- * This function deletes a user
- * data inside req.body
- * Preferred-Methode: DELETE
+ * Deletes a user based on the provided user ID.
+ * Preferred Method: DELETE
  *
- * @param req HTTP-Request
- * @param res HTTP-Response
- * @param next Possible-Middleware
+ * @param req HTTP Request
+ * @param res HTTP Response
+ * @param next Possible Middleware
  */
-function deleteUser(req,res,next){
+function deleteUser(req, res, next) {
     userModel.deleteUser(parseInt(req.params.id))
-        .then(data =>{
-            res.cookie('accessToken', '', {maxAge: 0});
-            res.sendStatus(200);
+        .then(data => {
+            res.cookie('accessToken', '', { maxAge: 0 }); // Clear the access token cookie
+            res.sendStatus(200); // Send a success status code when the user is deleted successfully
         })
         .catch(error => {
-            res.sendStatus(500);
-        })
-
+            res.sendStatus(500); // Send a generic server error status code if an error occurs
+        });
 }
 
 /**
- * This function adds a friend to the user
- * Preferred-Methode: POST
+ * Adds a friend to the user.
+ * Preferred Method: POST
  *
- * @param req HTTP-Request
- * @param res HTTP-Response
- * @param next Possible-Middleware
+ * @param req HTTP Request
+ * @param res HTTP Response
+ * @param next Possible Middleware
  */
-function addFriend(req,res,next){
+function addFriend(req, res, next) {
     userModel.addFriend(parseInt(req.params.id), parseInt(req.body.friendID))
-        .then(data =>{
-            console.log("This is data from addFriend: "+data)
-            res.status(200);
-            res.send(data);
+        .then(data => {
+            console.log("This is data from addFriend: " + data);
+            res.status(200); // Set the HTTP status code to 200 (OK)
+            res.send(data); // Send the updated data as the response
         })
         .catch(error => {
-            res.sendStatus(500);
-        })
-
+            res.sendStatus(500); // Send a generic server error status code if an error occurs
+        });
 }
 
 /**
- * This function sends the users friends to the front-end
- * This View shows all friends, which exist in the DB for this user
- * Preferred-Methode: GET
+ * Sends the user's friends to the front-end.
+ * This view shows all friends existing in the database for the specified user.
+ * Preferred Method: GET
  *
- * @param req HTTP-Request
- * @param res HTTP-Response
- * @param next Possible-Middleware Callback
+ * @param req HTTP Request
+ * @param res HTTP Response
+ * @param next Possible Middleware Callback
  */
 function viewFriends(req, res, next) {
     userModel.getFriends(parseInt(req.params.id))
         .then(friends => {
-            res.send(friends)
-            res.status(200)
+            res.status(200); // Set the HTTP status code to 200 (OK)
+            res.send(friends); // Send the retrieved friends as the response
         })
-        .catch(error => res.sendStatus(500));
+        .catch(error => res.sendStatus(500)); // Send a generic server error status code if an error occurs
 }
 
 /**
- * This function creates tries to log in a user
- * data inside req.body
- * Preferred-Methode: POST
+ * Tries to log in a user based on req.body.
+ * Preferred Method: POST
  *
- * @param req HTTP-Request
- * @param res HTTP-Response
- * @param next Possible-Middleware
+ * @param req HTTP Request
+ * @param res HTTP Response
+ * @param next Possible Middleware
  */
-function login(req,res,next){
+function login(req, res, next) {
     console.log(req.body);
-    userModel.getUsers().then( async (users) => {
+    userModel.getUsers().then(async (users) => {
         await authenticationService.authenticateUser(req.body, users, res);
-        res.sendStatus(200);
+        res.sendStatus(200); // Send a success status code when the user is logged in successfully
     }).catch((err) => {
-        res.sendStatus(500);
+        res.sendStatus(500); // Send a generic server error status code if an error occurs
     });
 }
 
 /**
- * This function logs out the User and redirects him to the index-page
- * Preferred-Methode: GET
+ * Logs out the user and redirects them to the index page.
+ * Preferred Method: GET
  *
- * @param req HTTP-Request
- * @param res HTTP-Response
- * @param next Possible-Middleware
+ * @param req HTTP Request
+ * @param res HTTP Response
+ * @param next Possible Middleware
  */
-function logout(req,res,next){
-    console.log("Logout in backend")
-    res.cookie('accessToken', '', {maxAge: 0});
-    res.sendStatus(200);
+function logout(req, res, next) {
+    console.log("Logout in backend");
+    res.cookie('accessToken', '', { maxAge: 0 }); // Clear the access token cookie
+    res.sendStatus(200); // Send a success status code when the user is logged out successfully
 }
 
 //// Exports
 module.exports = {
     viewUsers,
-    viewUser,
     editUser,
     register,
     deleteUser,

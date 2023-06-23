@@ -1,23 +1,19 @@
 <script setup>
-import {ref, onMounted} from 'vue'
+import { ref, onMounted } from 'vue'
 import axios from 'axios'
 
 const loggedIn = ref(null);
 
 onMounted(async () => {
   try {
-    const response = await axios.get('http://localhost:3000/', {withCredentials: true});
-     loggedIn.value = response.data;
+    // Make a GET request to retrieve user login status
+    const response = await axios.get('http://localhost:3000/', { withCredentials: true });
+    loggedIn.value = response.data;
     console.log(loggedIn.value);
   } catch (error) {
     console.error(error);
   }
 });
-
-function addChamp(){
-  console.log("Adding champion");
-}
-
 </script>
 <template>
   <div class="flex justify-center items-center">
@@ -74,7 +70,7 @@ function addChamp(){
             </div>
           </div>
           <div class="flex justify-end">
-            <form @submit="addChamp">
+            <form  v-if="loggedIn">
               <div class="flex col-span-3">
                 <div class="mr-4">
                   <select v-model="position" id="position" class="w-full px-4 py-4 rounded-md">
@@ -87,7 +83,7 @@ function addChamp(){
                   </select>
                 </div>
                 <div>
-                  <button class="bg-btn hover:bg-blue-800 font-bold py-3 px-2 rounded h-full" type="submit"> Add to my champs</button>
+                  <button @click="addChamp" class="bg-btn hover:bg-blue-800 font-bold py-3 px-2 rounded h-full" type="button"> Add to my champs</button>
                 </div>
               </div>
             </form>
@@ -107,7 +103,7 @@ export default {
   data() {
     return {
       champDet: [],
-      championIcons: {} // Add this line to define the championIcons data property
+      championIcons: {} // Define the championIcons data property
     };
   },
   mounted() {
@@ -117,6 +113,7 @@ export default {
     async getChampDet() {
       try {
         const championID = this.$route.params.championID;
+        // Make a GET request to retrieve champion details
         const response = await axios.get(`https://ddragon.leagueoflegends.com/cdn/13.12.1/data/en_US/champion/${championID}.json`);
         this.champDet = response.data.data[championID];
         console.log(this.champDet)
@@ -124,6 +121,20 @@ export default {
         console.error('Error retrieving champion details:', error);
       }
     },
+    async addChamp(){
+      console.log("Adding champion");
+      console.log(this.champDet.id)
+      try {
+        // Make a POST request to add the champion
+        const response = await axios.post(`http://localhost:3000/champions/addChampion`,
+            { champID: `${this.champDet.id}`, pos: `${this.position}` },
+            { withCredentials: true });
+        console.log(response)
+        window.location.href = "/champions";
+      } catch (error) {
+        console.error('Error retrieving users:', error);
+      }
+    }
   }
 };
 </script>

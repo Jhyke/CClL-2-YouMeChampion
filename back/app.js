@@ -68,6 +68,7 @@ app.all('*', notFound);
  * @param next Possible-Middleware
  */
 function errorHandler(err, req, res, next){
+    console.log(err)
     res.render('error', {error:err});
 }
 

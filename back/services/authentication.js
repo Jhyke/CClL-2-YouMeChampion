@@ -65,7 +65,6 @@ function authenticateJWT(req, res, next){
     }
 }
 
-//TODO: HIGH Change ugly ass fucking code
 /**
  * This function get the userID based on the JWT
  * @param req The HTTP-Request

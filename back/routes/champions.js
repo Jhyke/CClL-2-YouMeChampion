@@ -13,6 +13,12 @@ router.use(authenticationService.authenticateJWT);
 router.route('/')
     .get(championController.viewChampions);
 
+router.route('/addChampion')
+    .post(championController.addChampion)
+
+router.route('/selChampion')
+    .get(championController.viewSelChampion)
+
 
 
 //// Modules

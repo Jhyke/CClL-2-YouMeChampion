@@ -23,22 +23,23 @@ function logout() {
       .then((response) => {
         // Handle the successful login response
         console.log(response.data);
-        window.location.href="/";
+        window.location.href="/"; // Redirect to the home page after successful logout
       })
       .catch((error) => {
-        // Handle any errors that occurred during login
+        // Handle any errors that occurred during logout
         console.error(error); // Replace with your desired error handling logic
       });
 }
 </script>
+
 <template>
   <div class="navbar">
     <div class="flex-1">
       <router-link class="btn btn-ghost normal-case text-xl" to="/">Home</router-link>
-      <a class="btn btn-ghost normal-case text-xl">News</a>
+      <a class="btn normal-case text-xl" style="pointer-events: none;">News</a>
       <router-link class="btn btn-ghost normal-case text-xl" to="/champions">Champions</router-link>
-      <a class="btn btn-ghost normal-case text-xl">MostPLayed</a>
-      <a v-if="loggedIn" class="btn btn-ghost normal-case text-xl">Suggestions</a>
+      <a class="btn normal-case text-xl" style="pointer-events: none;">MostPlayed</a>
+      <a v-if="loggedIn" class="btn normal-case text-xl" style="pointer-events: none;">Suggestions</a>
       <router-link class="btn btn-ghost normal-case text-xl" to="/chats">Chats</router-link>
     </div>
     <div class="flex-none gap-2 dropdown dropdown-end ">
@@ -64,17 +65,14 @@ function logout() {
       </ul>
     </div>
   </div>
-
 </template>
 
 <script>
-import axios from 'axios';
 
 export default {
   name: 'LoginComponent',
 };
 </script>
-
 
 <style scoped>
 .navbar{

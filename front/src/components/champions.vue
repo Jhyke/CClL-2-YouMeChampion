@@ -3,21 +3,26 @@ import {ref, onMounted} from 'vue'
 import axios from 'axios'
 import SelectChamp from "./selectedChamp.vue";
 
+// Create a reactive variable to track the login status
 const loggedIn = ref(null);
 
+// Perform an action when the component is mounted
 onMounted(async () => {
   try {
+    // Make a GET request to the server to check if the user is logged in
     const response = await axios.get('http://localhost:3000/', {withCredentials: true});
-     loggedIn.value = response.data;
+    loggedIn.value = response.data; // Update the login status based on the response
     console.log(loggedIn.value);
   } catch (error) {
     console.error(error);
   }
 });
 </script>
+
 <template>
   <div class="flex justify-center items-center">
     <div class="mainBox">
+      <!-- Content for logged-in users -->
       <div v-if="loggedIn">
         <div class="firstGrid">
           <div class="col-span-5 h-full">
@@ -48,6 +53,7 @@ onMounted(async () => {
           </div>
         </div>
       </div>
+      <!-- Content for non-logged-in users -->
       <div v-else>
         <div class="grid grid-cols-1 md:grid-cols-5 gap-3 mt-4">
           <!-- Champions List Box -->
@@ -84,24 +90,26 @@ export default {
   name: 'ChampionsComponent',
   data() {
     return {
-      champions: [],
-      championIcons: {}
+      champions: [], // Array to store the champion data
+      championIcons: {} // Object to store the champion icons
     };
   },
   mounted() {
-    this.getChampions();
+    this.getChampions(); // Fetch the champion data when the component is mounted
   },
   methods: {
     async getChampions() {
       try {
+        // Make a GET request to retrieve the champion data from the server
         const response = await axios.get('https://ddragon.leagueoflegends.com/cdn/13.12.1/data/en_US/champion.json');
-        this.champions = Object.values(response.data.data);
-        this.championIcons = response.data.data;
+        this.champions = Object.values(response.data.data); // Update the array with the champion data
+        this.championIcons = response.data.data; // Update the object with the champion icons
       } catch (error) {
         console.error('Error retrieving champions:', error);
       }
     },
     getChampionIcon(championID) {
+      // Get the URL of the champion icon based on the champion ID
       return `https://ddragon.leagueoflegends.com/cdn/13.12.1/img/champion/${this.championIcons[championID].image.full}`;
     },
     viewChampionDetails(championID) {

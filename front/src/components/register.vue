@@ -36,9 +36,9 @@ export default {
   name: 'RegisterComponent',
   data() {
     return {
-      uname: "",
-      email: "",
-      pw: "",
+      uname: "", // Stores the username entered in the input field
+      email: "", // Stores the email entered in the input field
+      pw: "", // Stores the password entered in the input field
     };
   },
   methods: {

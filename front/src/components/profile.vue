@@ -1,5 +1,5 @@
 <script setup>
-import {ref, onMounted} from 'vue'
+import { ref, onMounted } from 'vue'
 import axios from 'axios'
 import FriendList from "./friendList.vue";
 import SelectChamp from "./selectedChamp.vue";
@@ -8,14 +8,71 @@ const loggedIn = ref(null);
 
 onMounted(async () => {
   try {
-    const response = await axios.get('http://localhost:3000/', {withCredentials: true});
-     loggedIn.value = response.data;
+    // Send a GET request to check if the user is logged in
+    const response = await axios.get('http://localhost:3000/', { withCredentials: true });
+    loggedIn.value = response.data;
     console.log(loggedIn.value);
   } catch (error) {
     console.error(error);
   }
 });
+
+function edit(event) {
+  console.log("Edit happened")
+  event.preventDefault(); // Prevent the default form submission
+
+  let userId = loggedIn.value.id;
+
+  let data = {
+    // Get the values from the input fields
+    uname: uname.value,
+    posi: posi.value,
+    secPosi: secPosi.value,
+    ign: ign.value,
+    email: email.value,
+    pw: pw.value,
+    desc: desc.value
+  }
+  console.log(data);
+  // Send a POST request to update the user's profile
+  axios.post(`http://localhost:3000/users/${userId}/edit`, data, {
+    withCredentials: true,
+  })
+      .then((response) => {
+        // Handle the successful profile update
+        console.log("This is before going back to /profile");
+        console.log(response.data);
+        window.location.href="/profile";
+      })
+      .catch((error) => {
+        // Handle any errors that occurred during the profile update
+        console.log("This is inside the catch");
+        console.error(error); // Replace with your desired error handling logic
+      });
+}
+
+function deleteUser(event) {
+  console.log("Delete happened")
+  let userId = loggedIn.value.id;
+
+  // Send a DELETE request to delete the user's account
+  axios.delete(`http://localhost:3000/users/${userId}/delete`, {
+    withCredentials: true,
+  })
+      .then((response) => {
+        console.log("This is before going back to /");
+        console.log(response.data);
+        window.location.href="/";
+      })
+      .catch((error) => {
+        // Handle any errors that occurred during the account deletion
+        console.log("This is inside the catch");
+        console.error(error);
+      });
+}
+
 </script>
+
 <template>
   <div v-if="loggedIn">
     <div class="flex justify-center items-center">
@@ -23,13 +80,13 @@ onMounted(async () => {
         <div class="flex gap-4">
           <div class="flex flex-col gap-4 w-1/4">
             <!-- Avatar Text Box -->
-            <div class="col-span-1 h-[25rem]">
+            <div class="col-span-1 h-[15rem]">
               <div class="p-4 bg-box h-full rounded">
                 <h2 class="text-xl font-bold mb-4">Avatar</h2>
               </div>
             </div>
             <!-- Friends List Box -->
-            <div class="col-span-1 h-full">
+            <div class="col-span-1 h-[34.6rem]">
               <FriendList />
             </div>
           </div>
@@ -136,15 +193,15 @@ onMounted(async () => {
       </div>
     </div>
   </div>
-  <div v-if="alertShown" class="fixed inset-0 flex items-center justify-center z-10">
-    <div class="bg-box rounded-lg p-8 max-w-sm mx-auto">
+  <div v-if="alertShown" class="fixed inset-0 flex items-center justify-center z-30">
+    <div class="bg-box rounded-lg p-8 max-w-sm mx-auto z-31">
       <h2 class="text-xl font-bold mb-4">Confirm Account Deletion</h2>
       <p>Are you sure you want to delete your account?</p>
       <div class="mt-8 flex justify-end">
         <button @click="cancelDeletion" class="bg-btn hover:bg-blue-800 font-bold px-4 py-2 rounded mr-3">
           Cancel
         </button>
-        <button @click="this.delete" class="bg-btn-del hover:bg-red-900 font-bold px-4 py-2 rounded">
+        <button @click="deleteUser" class="bg-btn-del hover:bg-red-900 font-bold px-4 py-2 rounded">
           Delete Account
         </button>
       </div>
@@ -154,8 +211,6 @@ onMounted(async () => {
 </template>
 
 <script>
-import axios from "axios";
-
 export default {
   name: 'ProfileComponent',
   data() {
@@ -169,63 +224,11 @@ export default {
     toggleForm() {
       this.formVisible = !this.formVisible;
     },
-    edit(event) {
-      console.log("Edit happened")
-      event.preventDefault(); // Prevent the default form submission
-
-      let userId = this.loggedIn.id;
-
-      let data = {
-        uname: this.uname,
-        posi: this.posi,
-        secPosi: this.secPosi,
-        ign: this.ign,
-        email: this.email,
-        pw: this.pw,
-        desc: this.desc
-      }
-      console.log(data);
-      // Send a POST request to your backend API with the edit credentials
-      axios.post(`http://localhost:3000/users/${userId}/edit`, data, {
-        withCredentials: true,
-      })
-          .then((response) => {
-            // Handle the successful login response
-            console.log("This is before going back to /profile");
-            console.log(response.data);
-            window.location.href="/profile";
-          })
-          .catch((error) => {
-            // Handle any errors that occurred during login
-            console.log("This is inside the catch");
-            console.error(error); // Replace with your desired error handling logic
-          });
-    },
     showAlert() {
       this.alertShown = true;
     },
     cancelDeletion() {
       this.alertShown = false;
-    },
-    delete(event) {
-      console.log("Delete happened")
-      let userId = this.loggedIn.id;
-
-
-
-      axios.delete(`http://localhost:3000/users/${userId}/delete`, {
-        withCredentials: true,
-      })
-          .then((response) => {
-            console.log("This is before going back to /");
-            console.log(response.data);
-            window.location.href="/";
-          })
-          .catch((error) => {
-            // Handle any errors that occurred during delete
-            console.log("This is inside the catch");
-            console.error(error);
-          });
     },
   }
 };

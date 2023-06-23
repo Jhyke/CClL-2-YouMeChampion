@@ -6,7 +6,7 @@
         <form @submit="login">
           <div class="mb-6">
             <label for="uname" class="block font-bold mb-2">Username</label>
-            <input id="uname" v-model="uname" type="text" class="w-full px-4 py-3  rounded-md" placeholder="Enter your username">
+            <input id="uname" v-model="uname" type="text" class="w-full px-4 py-3 rounded-md" placeholder="Enter your username">
           </div>
           <div class="mb-6">
             <label for="pw" class="block font-bold mb-2">Password</label>
@@ -52,7 +52,7 @@ export default {
           .then((response) => {
             // Handle the successful login response
             console.log(response.data);
-            window.location.href="/";
+            window.location.href="/"; // Redirect to the home page after successful login
           })
           .catch((error) => {
             // Handle any errors that occurred during login

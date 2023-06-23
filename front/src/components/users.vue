@@ -1,40 +1,44 @@
 <script setup>
 import FriendList from "./friendList.vue";
-import {ref, onMounted} from 'vue'
+import { ref, onMounted } from 'vue'
 import axios from 'axios'
-import {useRouter} from "vue-router";
+import { useRouter } from "vue-router";
 
-const loggedIn = ref(null);
-const router = useRouter();
+const loggedIn = ref(null); // Stores the logged-in user data
+const router = useRouter(); // Vue router instance
 
 onMounted(async () => {
   try {
-    const response = await axios.get('http://localhost:3000/', {withCredentials: true});
-    loggedIn.value = response.data;
-    getUsers();
+    const response = await axios.get('http://localhost:3000/', { withCredentials: true });
+    loggedIn.value = response.data; // Assigns the logged-in user data to loggedIn variable
+    await getUsers(); // Calls the function to get user data
     console.log(loggedIn.value);
   } catch (error) {
     console.error(error);
   }
 });
-const users = ref(null);
+
+const users = ref(null); // Stores the user data
+
 async function getUsers() {
   try {
     const response = await axios.get('http://localhost:3000/users/');
-    users.value = response.data;
+    users.value = response.data; // Assigns the retrieved user data to the users variable
   } catch (error) {
     console.error('Error retrieving users:', error);
   }
 }
-async function addFriend(friendID){
+
+async function addFriend(friendID) {
   try {
-    console.log(`${friendID}` + ` ${loggedIn.value.id}`)
-    const response = await axios.post(`http://localhost:3000/users/${loggedIn.value.id}/addFriend`, {friendID:`${friendID}`}).then(res => {});
-    router.go();
+    console.log(`${friendID}` + ` ${loggedIn.value.id}`);
+    const response = await axios.post(`http://localhost:3000/users/${loggedIn.value.id}/addFriend`, { friendID: `${friendID}` }).then(res => {});
+    router.go(); // Refreshes the page using Vue router
   } catch (error) {
     console.error('Error retrieving users:', error);
   }
 }
+
 </script>
 
 <template>
@@ -46,9 +50,9 @@ async function addFriend(friendID){
             <FriendList />
           </div>
           <!-- UsersList Box -->
-          <div class="col-span-3 h-full">
-            <div class="p-4 bg-box h-full rounded">
-              <h2 class="text-xl font-bold mb-4">All users</h2>
+          <div class="col-span-3 h-[50.5rem]">
+            <div class="p-4 bg-box h-full rounded rounded overflow-y-auto no-scrollbar">
+              <h2 class="text-xl font-bold mb-2 sticky bg-title top-0 z-20">All users</h2>
               <div class="md:grid-cols-4 w-1/2">
                 <ul class="col-span-2 h-full">
                   <li v-for="user in users" class="px-4 py-2 border-b border-gray-200 hover:bg-gray-100 transition-colors" :key="user.userID">

@@ -16,13 +16,17 @@ onMounted(async () => {
   try {
     const response = await axios.get('http://localhost:3000/', {withCredentials: true});
     loggedIn.value = response.data;
-    getFriends(loggedIn.value.id);
+    if (loggedIn.value) {
+      await getFriends(loggedIn.value.id);
+    }
     console.log(loggedIn.value);
   } catch (error) {
     console.error(error);
   }
 });
+
 const friends = ref(null);
+
 async function getFriends(id) {
   try {
     const response = await axios.get(`http://localhost:3000/users/${id}/friendList`);
@@ -39,9 +43,10 @@ function sendChatID(ID) {
 }
 
 </script>
+
 <template>
-  <div class="p-4 bg-box h-full rounded">
-    <h2 class="text-xl font-bold mb-2 sticky">FriendList</h2>
+  <div class="p-4 bg-box h-full rounded overflow-y-auto no-scrollbar">
+    <h2 class="text-xl font-bold mb-2 sticky bg-title top-0 z-20">FriendList</h2>
     <div class="flex h-full overflow-y-auto no-scrollbar" v-if="loggedIn">
       <ul class="h-full w-full" v-if="currUrl === chatUrl">
         <li v-for="friend in friends" class="px-4 py-2 border-b border-gray-200 hover:bg-gray-100 transition-colors" :key="friend.userID">
@@ -62,7 +67,7 @@ function sendChatID(ID) {
       </ul>
     </div>
     <div v-else>
-      <p>Pleas log in to see your friends</p>
+      <p>Please log in to see your friends</p>
     </div>
   </div>
 </template>

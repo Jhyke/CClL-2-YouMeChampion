@@ -13,9 +13,6 @@ router.use(authenticationService.authenticateJWT);
 router.route('/')
     .get(userController.viewUsers);
 
-router.route('/:id')
-    .get(userController.viewUser);
-
 router.route('/:id/edit')
     .post(userController.editUser);
 

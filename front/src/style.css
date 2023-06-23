@@ -62,6 +62,10 @@ h1{
   background-color: #1E282D;
   box-shadow: 4px 4px 5px #1E2328;
 }
+.bg-title{
+  background-color: #1E282D;
+  z-index: 2;
+}
 
 .bg-btn{
   background-color: #005A82;

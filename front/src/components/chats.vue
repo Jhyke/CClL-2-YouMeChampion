@@ -1,5 +1,5 @@
 <script setup>
-import {ref, onMounted} from 'vue'
+import { ref, onMounted } from 'vue'
 import axios from 'axios'
 import FriendList from "./friendList.vue";
 
@@ -9,19 +9,24 @@ const curRoom = ref(null);
 
 onMounted(async () => {
   try {
-    const response = await axios.get('http://localhost:3000/', {withCredentials: true});
+    // Make a GET request to retrieve user login status
+    const response = await axios.get('http://localhost:3000/', { withCredentials: true });
     loggedIn.value = response.data;
     console.log(loggedIn.value);
 
     console.log("Starting connection to WebSocket Server");
+    // Create a WebSocket connection to the server
     connection.value = new WebSocket("ws://localhost:8080");
 
+    // Event listener for incoming messages from the WebSocket server
     connection.value.onmessage = (event) => {
       addTextMessage(JSON.parse(event.data));
     };
 
+    // Event listener for successful WebSocket connection
     connection.value.onopen = (event) => {
       console.log('websocket is connected ...')
+      // Send a message to the server indicating the current room
       connection.value.send(JSON.stringify({
         name: "Server",
         room: curRoom.value,
@@ -45,6 +50,7 @@ function sendMyMessage() {
   document.getElementById("message").value = "";
   if (text) {
     console.log(message);
+    // Send the message via WebSocket connection
     connection.value.send(JSON.stringify(message));
   }
 }
@@ -95,7 +101,7 @@ function connectRoom(roomID){
   let message = {
     room: roomID,
     name: "Server",
-    message: "Your a connected to room: " + roomID,
+    message: "You are connected to room: " + roomID,
   };
   addTextMessage(message)
 }
@@ -105,6 +111,7 @@ function handleChatID (chatID) {
   connectRoom(curRoom.value)
 }
 </script>
+
 <template>
   <div class="flex justify-center items-center">
     <div class="mainBox">
@@ -122,23 +129,55 @@ function handleChatID (chatID) {
               <div class="bg-box h-full py-3">
                 <div class="p-4 h-full overflow-y-auto rounded no-scrollbar">
                   <h2 class="text-xl font-bold mb-4 sticky -top-4 bg-box">Public List</h2>
-                  <div @click="roomChange('all')" class="flex bg-gray-300 rounded btn-ghost h-[4rem] place-items-center">
-                    <a class="ml-2 text-xl">All lanes</a>
+                  <!-- Room selection buttons -->
+                  <div @click="roomChange('all')" class="flex bg-gray-300 rounded btn-ghost h-[4rem] w-full place-items-center">
+                    <div class="w-full">
+                      <a class="ml-2 text-xl">All lanes</a>
+                    </div>
+                    <div class="flex justify-end w-full mr-3">
+                      <span>#1</span>
+                    </div>
                   </div>
+                  <!-- More room selection buttons -->
                   <div @click="roomChange('top')" class="flex mt-3 bg-gray-300 rounded btn-ghost h-[4rem] place-items-center">
-                    <a class="ml-2 text-xl">Top lane</a>
+                    <div class="w-full">
+                      <a class="ml-2 text-xl">Top</a>
+                    </div>
+                    <div class="flex justify-end w-full mr-3">
+                      <span>#2</span>
+                    </div>
                   </div>
                   <div @click="roomChange('jungle')" class="flex mt-3 bg-gray-300 rounded btn-ghost h-[4rem] place-items-center">
-                    <a class="ml-2 text-xl">Jungle lane</a>
+                    <div class="w-full">
+                      <a class="ml-2 text-xl">Jungle</a>
+                    </div>
+                    <div class="flex justify-end w-full mr-3">
+                      <span>#3</span>
+                    </div>
                   </div>
                   <div @click="roomChange('mid')" class="flex mt-3 bg-gray-300 rounded btn-ghost h-[4rem] place-items-center">
-                    <a class="ml-2 text-xl">Mid lane</a>
+                    <div class="w-full">
+                      <a class="ml-2 text-xl">Mid</a>
+                    </div>
+                    <div class="flex justify-end w-full mr-3">
+                      <span>#4</span>
+                    </div>
                   </div>
                   <div @click="roomChange('bot')" class="flex mt-3 bg-gray-300 rounded btn-ghost h-[4rem] place-items-center">
-                    <a class="ml-2 text-xl">Bot lane</a>
+                    <div class="w-full">
+                      <a class="ml-2 text-xl">Bottom</a>
+                    </div>
+                    <div class="flex justify-end w-full mr-3">
+                      <span>#5</span>
+                    </div>
                   </div>
                   <div @click="roomChange('support')" class="flex mt-3 bg-gray-300 rounded btn-ghost h-[4rem] place-items-center">
-                    <a class="ml-2 text-xl">Support lane</a>
+                    <div class="w-full">
+                      <a class="ml-2 text-xl">Supports</a>
+                    </div>
+                    <div class="flex justify-end w-full mr-3">
+                      <span>#6</span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -149,11 +188,12 @@ function handleChatID (chatID) {
             <div class="col-span-3 h-full">
               <div class="p-4 bg-box h-full rounded">
                 <h2 class="text-xl font-bold mb-4">Chat</h2>
+                <!-- Chat window -->
                 <div id="chat-window" class="bg-gray-300 max-h-[30rem] min-h-[30rem] overflow-y-auto no-scrollbar mb-3 rounded">
-                  <div id="chat-messages" class="p-4 h-full">
-
-                  </div>
+                  <!-- Chat messages -->
+                  <div id="chat-messages" class="p-4 h-full"></div>
                 </div>
+                <!-- Chat user input -->
                 <div id="chat-user-input" class="padding transparent flex">
                   <textarea id="message" class="w-full px-4 py-3 mr-3 rounded-md" rows="1" placeholder="Type your message"></textarea>
                   <button @click="sendMyMessage" class="bg-btn hover:bg-blue-800 font-bold py-3 px-6 rounded">SEND</button>
@@ -169,6 +209,7 @@ function handleChatID (chatID) {
           <div class="col-span-1 h-full">
             <div class="p-4 bg-box h-full rounded">
               <h2 class="text-xl font-bold mb-4">Public List</h2>
+              <!-- Room selection buttons -->
               <div class="flex bg-gray-300 rounded btn-ghost h-[4rem] place-items-center">
                 <a class="ml-2 text-xl">All lanes</a>
               </div>
@@ -204,12 +245,11 @@ function handleChatID (chatID) {
 <script>
 export default {
   name: 'ChatComponent'
-
 }
 </script>
 
 <style scoped>
-.firstGrid{
+.firstGrid {
   height: 88vh;
 }
 </style>
