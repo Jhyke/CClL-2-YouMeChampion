@@ -23,5 +23,14 @@ Welcome to my page I made for the studie course BCC. It is a page for League of 
       - The user sees their friendlist and their selected champions
       - The user can edit their profile here for more personalisation
 
-  ## Get Started
-  
+## Get Started
+  1. Clone this repository
+  2. cd front && cd back in seperate terminals
+  3. Install dependencies: npm install in both terminals
+  4. In the database.js make sure to change:
+    host: "YOUR HOST NAME HERE" port: YOUR PORT HERE, database: "YOUR DATABASE NAME HERE"
+  5. Create an .env file in "Backend" which holds:
+    DB_USERNAME="YOUR DB USERNAME HERE" DB_PASSWORD="YOUR DB PASSWORD HERE" ACCESS_TOKEN_SECRET="YOUR ENCODED SECRET BY BCRYPT HERE"
+  6. The localhost for the backend is currently set to 3000
+  7. Run the development server: npm run dev in both terminals
+  8. Open your browser and visit http://localhost:5173 to access the webpage.
